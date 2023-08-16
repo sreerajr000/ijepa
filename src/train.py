@@ -52,7 +52,7 @@ from src.transforms import make_transforms
 # --
 log_timings = True
 log_freq = 10
-checkpoint_freq = 50
+checkpoint_freq = 1
 # --
 
 _GLOBAL_SEED = 0
@@ -369,6 +369,9 @@ def main(args, resume_preempt=False):
             log_stats()
 
             assert not np.isnan(loss), 'loss is nan'
+
+            if itr % 10000 == 0:
+                save_checkpoint(itr)
 
         # -- Save Checkpoint after every epoch
         logger.info('avg. loss %.3f' % loss_meter.avg)
