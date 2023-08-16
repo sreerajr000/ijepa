@@ -203,7 +203,7 @@ def main(args, resume_preempt=False):
             copy_data=copy_data,
             drop_last=True)
     ipe = len(unsupervised_loader)
-
+    print(f'Iterations per epoch : {ipe}')
     # -- init optimizer and scheduler
     optimizer, scaler, scheduler, wd_scheduler = init_opt(
         encoder=encoder,
