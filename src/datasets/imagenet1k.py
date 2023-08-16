@@ -63,6 +63,70 @@ def make_imagenet1k(
     return dataset, data_loader, dist_sampler
 
 
+# class ImageNet(torchvision.datasets.ImageFolder):
+
+#     def __init__(
+#         self,
+#         root,
+#         image_folder='imagenet_full_size/061417/',
+#         tar_file='imagenet_full_size-061417.tar.gz',
+#         transform=None,
+#         train=True,
+#         job_id=None,
+#         local_rank=None,
+#         copy_data=True,
+#         index_targets=False
+#     ):
+#         """
+#         ImageNet
+
+#         Dataset wrapper (can copy data locally to machine)
+
+#         :param root: root network directory for ImageNet data
+#         :param image_folder: path to images inside root network directory
+#         :param tar_file: zipped image_folder inside root network directory
+#         :param train: whether to load train data (or validation)
+#         :param job_id: scheduler job-id used to create dir on local machine
+#         :param copy_data: whether to copy data from network file locally
+#         :param index_targets: whether to index the id of each labeled image
+#         """
+
+#         suffix = 'train/' if train else 'val/'
+#         data_path = None
+#         if copy_data:
+#             logger.info('copying data locally')
+#             data_path = copy_imgnt_locally(
+#                 root=root,
+#                 suffix=suffix,
+#                 image_folder=image_folder,
+#                 tar_file=tar_file,
+#                 job_id=job_id,
+#                 local_rank=local_rank)
+#         if (not copy_data) or (data_path is None):
+#             data_path = os.path.join(root, image_folder, suffix)
+#         logger.info(f'data-path {data_path}')
+
+#         super(ImageNet, self).__init__(root=data_path, transform=transform)
+#         logger.info('Initialized ImageNet')
+
+#         if index_targets:
+#             self.targets = []
+#             for sample in self.samples:
+#                 self.targets.append(sample[1])
+#             self.targets = np.array(self.targets)
+#             self.samples = np.array(self.samples)
+
+#             mint = None
+#             self.target_indices = []
+#             for t in range(len(self.classes)):
+#                 indices = np.squeeze(np.argwhere(
+#                     self.targets == t)).tolist()
+#                 self.target_indices.append(indices)
+#                 mint = len(indices) if mint is None else min(mint, len(indices))
+#                 logger.debug(f'num-labeled target {t} {len(indices)}')
+#             logger.info(f'min. labeled indices {mint}')
+
+
 class ImageNet(torchvision.datasets.ImageFolder):
 
     def __init__(
@@ -91,7 +155,8 @@ class ImageNet(torchvision.datasets.ImageFolder):
         :param index_targets: whether to index the id of each labeled image
         """
 
-        suffix = 'train/' if train else 'val/'
+        # suffix = 'train/' if train else 'val/'
+        suffix = '' if train else 'val/'
         data_path = None
         if copy_data:
             logger.info('copying data locally')
